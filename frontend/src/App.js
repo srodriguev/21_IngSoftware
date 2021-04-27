@@ -5,6 +5,7 @@ import { Navbar } from "./components/Navbar";
 import { About } from "./components/About";
 import { Users } from "./components/Users";
 import { Board } from "./components/Board";
+import { HomePage } from "./components/HomePage";
 
 function App() {
   return (
@@ -14,8 +15,9 @@ function App() {
       <div className="container p-4">
         <Switch>
           <Route path="/about" component={About} />
-          <Route path="/" component={Users} />
+          <Route path="/Users" component={Users} />
           <Route path="/board" component={Board} />
+          <Route path="/" component={HomePage} />
         </Switch>
       </div>
     </Router>
