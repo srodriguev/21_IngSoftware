@@ -77,8 +77,9 @@ def createPoll():
   print(request.json)
   id = db2.insert({
     'name': request.json['name'],
-    'timeLeft': request.json['timeLeft'],
-    'questions': request.json['questions']
+    'targetPublic': request.json['targetPublic'],
+    'questions': request.json['questions'],
+    'finishDate': request.json['finishDate']
   })
   return jsonify(str(ObjectId(id)))
 
@@ -90,8 +91,9 @@ def getPolls():
         polls.append({
             '_id': str(ObjectId(doc['_id'])),
             'name': doc['name'],
-            'timeLeft': doc['timeLeft'],
-            'questions': doc['questions']
+            'targetPublic': doc['targetPublic'],
+            'questions': doc['questions'],
+            'finishDate': doc['finishDate']
         })
     return jsonify(polls)
 
@@ -102,8 +104,9 @@ def getPoll(id):
   return jsonify({
       '_id': str(ObjectId(poll['_id'])),
       'name': poll['name'],
-      'timeLeft': poll['timeLeft'],
-      'questions': poll['questions']
+      'targetPublic': poll['targetPublic'],
+      'questions': poll['questions'],
+      'finishDate': poll['finishDate']
   })
 
 
@@ -117,8 +120,9 @@ def updatePoll(id):
   print(request.json)
   db2.update_one({'_id': ObjectId(id)}, {"$set": {
     'name': request.json['name'],
-    'timeLeft': request.json['timeLeft'],
-    'questions': request.json['questions']
+    'targetPublic': request.json['targetPublic'],
+    'questions': request.json['questions'],
+    'finishDate': request.json['finishDate']
   }})
   return jsonify({'message': 'Poll Updated'})
 

@@ -4,8 +4,9 @@ const API = process.env.REACT_APP_API;
 
 export function Board() {
     const [name, setName] = useState("");
-    const [timeLeft, setTimeLeft] = useState("");
+    const [targetPublic, setTargetPublic] = useState("");
     const [questions, setQuestions] = useState("");
+    const [finishDate, setFinishDate] = useState(new Date());
 
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState("");
@@ -24,8 +25,9 @@ export function Board() {
                 },
                 body: JSON.stringify({
                     name,
-                    timeLeft,
+                    targetPublic,
                     questions,
+                    finishDate,
                 }),
             });
             await res.json();
@@ -37,8 +39,9 @@ export function Board() {
                 },
                 body: JSON.stringify({
                     name,
-                    timeLeft,
+                    targetPublic,
                     questions,
+                    finishDate,
                 }),
             });
             const data = await res.json();
@@ -49,8 +52,9 @@ export function Board() {
         await getPolls();
 
         setName("");
-        setTimeLeft("");
+        setTargetPublic("");
         setQuestions("");
+        setFinishDate(new Date());
         nameInput.current.focus();
     };
 
@@ -81,8 +85,24 @@ export function Board() {
 
         // Reset
         setName(data.name);
-        setTimeLeft(data.timeLeft);
+        setTargetPublic(data.targetPublic);
         setQuestions(data.questions);
+        setFinishDate(data.finishDate);
+        nameInput.current.focus();
+    };
+
+    const answerPoll = async (id) => {
+        const res = await fetch(`${API}/board/${id}`);
+        const data = await res.json();
+
+        setEditing(true);
+        setId(id);
+
+        // Reset
+        setName(data.name);
+        setTargetPublic(data.targetPublic);
+        setQuestions(data.questions);
+        setFinishDate(data.finishDate);
         nameInput.current.focus();
     };
 
@@ -92,8 +112,9 @@ export function Board() {
 
     return (
         <div className="row">
-            <div className="col-md-4">
+            <div className="col-md-5">
                 <form onSubmit={handleSubmit} className="card card-body">
+                <h8>Pon el título de tu Encuesta</h8>
                     <div className="form-group">
                         <input
                             type="text"
@@ -104,45 +125,70 @@ export function Board() {
                             ref={nameInput}
                             autoFocus />
                     </div>
+                    <h8>Especifica el público al que va dirigido</h8>
                     <div className="form-group">
                         <input
                             type="text"
-                            onChange={(e) => setTimeLeft(e.target.value)}
-                            value={timeLeft}
+                            onChange={(e) => setTargetPublic(e.target.value)}
+                            value={targetPublic}
                             className="form-control"
-                            placeholder="Weeks Until Closed" />
+                            placeholder="Intended Public" />
                     </div>
+                    <h8>Pon las preguntas aquí</h8>
                     <div className="form-group">
                         <input
-                            type="textarea"
-                            rows={3}
+                            type="textArea" 
+                            value= {questions}
+                            rows= {5}
+                            style= {{ minHeight:150, resize: "none" }}
                             onChange={(e) => setQuestions(e.target.value)}
                             value={questions}
                             className="form-control"
                             placeholder="Questions" />
+                    </div>
+                    <h8>Pon la fecha límite del cuestionario</h8>
+                    <div className="form-group">
+                        <input
+                            Label ="Finish Date"
+                            text = "Finish Date of Poll"
+                            type="Date"
+                            onChange={(e) => setFinishDate(e.target.value)}
+                            value={finishDate}
+                            className="form-control"
+                            placeholder="finish Date" />
                     </div>
                     <button className="btn btn-primary btn-block">
                         {editing ? "Update" : "Create"}
                     </button>
                 </form>
             </div>
+            
             <div className="col-md-6">
+            <h3>Encuestas abiertas: </h3>
                 <table className="table table-striped">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>timeLeft</th>
-                            <th>questions</th>
-                            <th>Operations</th>
+                            <th>Título</th>
+                            <th>Público</th>
+                            <th>Preguntas</th>
+                            <th>Fecha de Fin</th>
+                            <th>Operaciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {polls.map((poll) => (
                             <tr key={poll._id}>
                                 <td>{poll.name}</td>
-                                <td>{poll.timeLeft}</td>
+                                <td>{poll.targetPublic}</td>
                                 <td>{poll.questions}</td>
+                                <td>{poll.finishDate}</td>
                                 <td>
+                                    <button
+                                        className="btn btn-primary btn-sm btn-block"
+                                        onClick={(e) => answerPoll(poll._id)}
+                                    >
+                                        Answer
+                                    </button>
                                     <button
                                         className="btn btn-secondary btn-sm btn-block"
                                         onClick={(e) => editPoll(poll._id)}
@@ -154,7 +200,7 @@ export function Board() {
                                         onClick={(e) => deletePoll(poll._id)}
                                     >
                                         Delete
-                                    </button>
+                                    </button>  
                                 </td>
                             </tr>
                         ))}
