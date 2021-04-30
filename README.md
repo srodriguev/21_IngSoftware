@@ -1,3 +1,2 @@
 # Python Flask & React Hooks with Mongodb
-
-![](./screenshot.png)
+Ingeniería de Software 2021-1
