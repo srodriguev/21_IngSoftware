@@ -1,14 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
+import SearchBar from './SearchBar';
+import PollList from './AnswerList';
 
 const API = process.env.REACT_APP_API;
 
-export function Board() {
-    
+export function PollDetail() {
+
+    // Variables Polls
     const [pollName, setPollName] = useState("");
     const [targetPublic, setTargetPublic] = useState("");
     const [questions, setQuestions] = useState("");
     const [finishDate, setFinishDate] = useState(new Date());
-    const [thisPollID, setThisPollID] = useState("");
+
+    // Variables Answers
+    const [answerName, setAnswerName] = useState("");
+    const [pollID, setPollID] = useState("");
+    const [answers, setAnswers] = useState("");
+    const [notes, setNotes] = useState(new Date());
 
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState("");
@@ -56,7 +64,7 @@ export function Board() {
         setPollName("");
         setTargetPublic("");
         setQuestions("");
-        setFinishDate("");
+        setFinishDate(new Date());
         nameInput.current.focus();
     };
 
@@ -93,16 +101,16 @@ export function Board() {
         nameInput.current.focus();
     };
 
-    const answerPoll = async (id) => {
-        setThisPollID(id);
-    };
-
     useEffect(() => {
         getPolls();
     }, []);
 
     return (
         <div className="row">
+            <div className="row">
+                <h4>Busca la encuesta que deseas consultar por su ID</h4>
+                
+            </div>
             <div className="col-md-5">
                 <form onSubmit={handleSubmit} className="card card-body">
                 <h8>Pon el título de tu Encuesta</h8>
@@ -173,12 +181,6 @@ export function Board() {
                                 <td>{poll.questions}</td>
                                 <td>{poll.finishDate}</td>
                                 <td>
-                                    <button
-                                        className="btn btn-primary btn-sm btn-block"
-                                        onClick={(e) => answerPoll(poll._id)}
-                                    >
-                                        Answer
-                                    </button>
                                     <button
                                         className="btn btn-secondary btn-sm btn-block"
                                         onClick={(e) => editPoll(poll._id)}

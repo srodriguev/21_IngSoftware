@@ -15,6 +15,7 @@ export const Navbar = () => (
             </li>
           </ul>
         </div>
+        
 
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
@@ -27,11 +28,26 @@ export const Navbar = () => (
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
+            <Link className="nav-link" to="/pollDetail">Poll Details</Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav">
+            <li className="nav-item">
             <Link className="nav-link" to="/users">Users</Link>
             </li>
           </ul>
         </div>
 
-        
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <Link className="nav-link" to="/registers">Register</Link>
+            </li>
+          </ul>
+        </div>
+  
       </nav>
 )

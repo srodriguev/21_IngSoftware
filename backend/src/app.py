@@ -16,6 +16,7 @@ CORS(app)
 # Database
 db1 = mongo.db.reactUsers
 db2 = mongo.db.reactPolls
+db3 = mongo.db.reactAnswers
 
 # Routes
 @app.route('/users', methods=['POST'])
@@ -27,7 +28,6 @@ def createUser():
     'password': request.json['password']
   })
   return jsonify(str(ObjectId(id)))
-
 
 @app.route('/users', methods=['GET'])
 def getUsers():
@@ -69,7 +69,7 @@ def updateUser(id):
   return jsonify({'message': 'User Updated'})
 
 
-# separador
+# separador: inicio polls
 
 # Routes
 @app.route('/board', methods=['POST'])
@@ -125,6 +125,65 @@ def updatePoll(id):
     'finishDate': request.json['finishDate']
   }})
   return jsonify({'message': 'Poll Updated'})
+
+
+  # separador - inicio answers
+
+# Routes
+@app.route('/PollDetail/', methods=['POST'])
+def createAnswer():
+  print(request.json)
+  id = db3.insert({
+    'pollID': request.json['pollID'],
+    'name': request.json['name'],
+    'answers': request.json['answers'],
+    'notes': request.json['notes']
+  })
+  return jsonify(str(ObjectId(id)))
+
+
+@app.route('/PollDetail/', methods=['GET'])
+def getAnswers():
+    answers = []
+    for doc in db3.find():
+        answers.append({
+            '_id': str(ObjectId(doc['_id'])),
+            'pollID': doc['pollID'],
+            'name': doc['name'],
+            'answers': doc['answers'],
+            'notes': doc['notes']
+        })
+    return jsonify(answers)
+
+@app.route('/PollDetail/<id>', methods=['GET'])
+def getAnswer(id):
+  answer = db3.find_one({'_id': ObjectId(id)})
+  print(answer)
+  return jsonify({
+      '_id': str(ObjectId(answer['_id'])),
+      'pollID': answer['pollID'],
+      'name': answer['name'],
+      'answers': answer['answers'],
+      'notes': answer['notes']
+  })
+
+
+@app.route('/PollDetail/<id>', methods=['DELETE'])
+def deleteAnswer(id):
+  db3.delete_one({'_id': ObjectId(id)})
+  return jsonify({'message': 'Answer Deleted'})
+
+
+@app.route('/PollDetail/<id>', methods=['PUT'])
+def updateAnswer(id):
+  print(request.json)
+  db3.update_one({'_id': ObjectId(id)}, {"$set": {
+    'pollID': request.json['pollID'],
+    'name': request.json['name'],
+    'answers': request.json['answers'],
+    'notes': request.json['notes']
+  }})
+  return jsonify({'message': 'Answer Updated'})
 
 if __name__ == "__main__":
     app.run(debug=True)

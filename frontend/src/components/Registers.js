@@ -2,16 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 
 const API = process.env.REACT_APP_API;
 
-export const Users = () => {
+export const Registers = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState("");
-  const [reputation, setReputation] = useState("");
-  const [pollNumber, setPollNumber] = useState("");
-  const [answerNumber, setAnswerNumber] = useState("");
-
 
   const nameInput = useRef(null);
 
@@ -95,16 +92,50 @@ export const Users = () => {
 
   return (
     <div className="row">
-      <div className="col-md-12">
+      <div className="col-md-4">
+        <form onSubmit={handleSubmit} className="card card-body">
+          <div className="form-group">
+            <input
+              type="text"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              className="form-control"
+              placeholder="Name"
+              ref={nameInput}
+              autoFocus
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              className="form-control"
+              placeholder="User's Email"
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              className="form-control"
+              placeholder="User's Password"
+            />
+          </div>
+          <button className="btn btn-primary btn-block">
+            {editing ? "Update" : "Create"}
+          </button>
+        </form>
+      </div>
+      <div className="col-md-6">
         <table className="table table-striped">
           <thead>
             <tr>
               <th>Name</th>
               <th>Email</th>
               <th>Password</th>
-              <th>Reputation</th>
-              <th>Polls</th>
-              <th>Answers</th>
+              <th>Operations</th>
             </tr>
           </thead>
           <tbody>
@@ -113,6 +144,20 @@ export const Users = () => {
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>{user.password}</td>
+                <td>
+                  <button
+                    className="btn btn-secondary btn-sm btn-block"
+                    onClick={(e) => editUser(user._id)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm btn-block"
+                    onClick={(e) => deleteUser(user._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -120,4 +165,5 @@ export const Users = () => {
       </div>
     </div>
   );
+
 };
