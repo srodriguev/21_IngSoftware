@@ -8,7 +8,7 @@ import { About } from "./components/About";
 import { Users } from "./components/Users";
 import { Board } from "./components/Board";
 import { HomePage } from "./components/HomePage";
-import { PollDetail } from "./components/PollDetail";
+import { Polls } from "./components/Polls";
 import { Registers } from "./components/Registers";
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
           <Route exact path="/About" component={About} />
           <Route exact path="/Users" component={Users} />
           <Route exact path="/Board" component={Board} />
-          <Route exact path="/PollDetail" component={PollDetail} />
+          <Route exact path="/Polls" component={Polls} />
           <Route exact path="/Registers" component={Registers} />
           <Route exact path="/" component={HomePage} />
         </Switch>

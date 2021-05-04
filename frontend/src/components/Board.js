@@ -7,8 +7,9 @@ export function Board() {
     const [pollName, setPollName] = useState("");
     const [targetPublic, setTargetPublic] = useState("");
     const [questions, setQuestions] = useState("");
-    const [finishDate, setFinishDate] = useState(new Date());
-    const [thisPollID, setThisPollID] = useState("");
+    const [finishDate, setFinishDate] = useState("");
+
+
 
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState("");
@@ -30,6 +31,7 @@ export function Board() {
                     targetPublic,
                     questions,
                     finishDate,
+                    
                 }),
             });
             await res.json();
@@ -44,6 +46,7 @@ export function Board() {
                     targetPublic,
                     questions,
                     finishDate,
+                    
                 }),
             });
             const data = await res.json();
@@ -57,6 +60,7 @@ export function Board() {
         setTargetPublic("");
         setQuestions("");
         setFinishDate("");
+
         nameInput.current.focus();
     };
 
@@ -90,11 +94,12 @@ export function Board() {
         setTargetPublic(data.targetPublic);
         setQuestions(data.questions);
         setFinishDate(data.finishDate);
+
         nameInput.current.focus();
     };
 
     const answerPoll = async (id) => {
-        setThisPollID(id);
+        
     };
 
     useEffect(() => {
@@ -102,58 +107,8 @@ export function Board() {
     }, []);
 
     return (
-        <div className="row">
-            <div className="col-md-5">
-                <form onSubmit={handleSubmit} className="card card-body">
-                <h8>Pon el título de tu Encuesta</h8>
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            onChange={(e) => setPollName(e.target.value)}
-                            value={pollName}
-                            className="form-control"
-                            placeholder="Poll's Name"
-                            ref={nameInput}
-                            autoFocus />
-                    </div>
-                    <h8>Especifica el público al que va dirigido</h8>
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            onChange={(e) => setTargetPublic(e.target.value)}
-                            value={targetPublic}
-                            className="form-control"
-                            placeholder="Intended Public" />
-                    </div>
-                    <h8>Pon las preguntas aquí</h8>
-                    <div className="form-group">
-                        <input
-                            type="textArea" 
-                            value= {questions}
-                            rows= {5}
-                            style= {{ minHeight:150, resize: "none" }}
-                            onChange={(e) => setQuestions(e.target.value)}
-                            className="form-control"
-                            placeholder="Questions" />
-                    </div>
-                    <h8>Pon la fecha límite del cuestionario</h8>
-                    <div className="form-group">
-                        <input
-                            Label ="Finish Date"
-                            text = "Finish Date of Poll"
-                            type="Date"
-                            onChange={(e) => setFinishDate(e.target.value)}
-                            value={finishDate}
-                            className="form-control"
-                            placeholder="finish Date" />
-                    </div>
-                    <button className="btn btn-primary btn-block">
-                        {editing ? "Update" : "Create"}
-                    </button>
-                </form>
-            </div>
-            
-            <div className="col-md-6">
+        <div className="row">           
+            <div className="col-md-12">
             <h3>Encuestas abiertas: </h3>
                 <table className="table table-striped">
                     <thead>

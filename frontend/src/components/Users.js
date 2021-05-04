@@ -29,6 +29,9 @@ export const Users = () => {
           name,
           email,
           password,
+          reputation,
+          pollNumber,
+          answerNumber,
         }),
       });
       await res.json();
@@ -42,6 +45,9 @@ export const Users = () => {
           name,
           email,
           password,
+          reputation,
+          pollNumber,
+          answerNumber,
         }),
       });
       const data = await res.json();
@@ -54,6 +60,9 @@ export const Users = () => {
     setName("");
     setEmail("");
     setPassword("");
+    setReputation("");
+    setPollNumber("");
+    setAnswerNumber("");
     nameInput.current.focus();
   };
 
@@ -86,6 +95,9 @@ export const Users = () => {
     setName(data.name);
     setEmail(data.email);
     setPassword(data.password);
+    setReputation(data.reputation);
+    setPollNumber(data.pollNumber);
+    setAnswerNumber(data.answerNumber);
     nameInput.current.focus();
   };
 
@@ -113,6 +125,9 @@ export const Users = () => {
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>{user.password}</td>
+                <td>{user.reputation}</td>
+                <td>{user.polls}</td>
+                <td>{user.answers}</td>
               </tr>
             ))}
           </tbody>

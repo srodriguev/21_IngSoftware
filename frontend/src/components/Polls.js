@@ -1,22 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import SearchBar from './SearchBar';
-import PollList from './AnswerList';
 
 const API = process.env.REACT_APP_API;
 
-export function PollDetail() {
-
-    // Variables Polls
+export function Polls() {
+    
     const [pollName, setPollName] = useState("");
     const [targetPublic, setTargetPublic] = useState("");
     const [questions, setQuestions] = useState("");
-    const [finishDate, setFinishDate] = useState(new Date());
-
-    // Variables Answers
-    const [answerName, setAnswerName] = useState("");
-    const [pollID, setPollID] = useState("");
-    const [answers, setAnswers] = useState("");
-    const [notes, setNotes] = useState(new Date());
+    const [numberQuestions, setNumberQuestions] = useState("");
+    const [finishDate, setFinishDate] = useState("");
+    
 
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState("");
@@ -38,6 +31,7 @@ export function PollDetail() {
                     targetPublic,
                     questions,
                     finishDate,
+                    
                 }),
             });
             await res.json();
@@ -52,6 +46,7 @@ export function PollDetail() {
                     targetPublic,
                     questions,
                     finishDate,
+                    
                 }),
             });
             const data = await res.json();
@@ -64,7 +59,8 @@ export function PollDetail() {
         setPollName("");
         setTargetPublic("");
         setQuestions("");
-        setFinishDate(new Date());
+        setFinishDate("");
+
         nameInput.current.focus();
     };
 
@@ -98,7 +94,12 @@ export function PollDetail() {
         setTargetPublic(data.targetPublic);
         setQuestions(data.questions);
         setFinishDate(data.finishDate);
+
         nameInput.current.focus();
+    };
+
+    const answerPoll = async (id) => {
+        
     };
 
     useEffect(() => {
@@ -107,10 +108,6 @@ export function PollDetail() {
 
     return (
         <div className="row">
-            <div className="row">
-                <h4>Busca la encuesta que deseas consultar por su ID</h4>
-                
-            </div>
             <div className="col-md-5">
                 <form onSubmit={handleSubmit} className="card card-body">
                 <h8>Pon el título de tu Encuesta</h8>
@@ -124,7 +121,7 @@ export function PollDetail() {
                             ref={nameInput}
                             autoFocus />
                     </div>
-                    <h8>Especifica el público al que va dirigido</h8>
+                <h8>Especifica el público al que va dirigido</h8>
                     <div className="form-group">
                         <input
                             type="text"
@@ -132,6 +129,18 @@ export function PollDetail() {
                             value={targetPublic}
                             className="form-control"
                             placeholder="Intended Public" />
+                    </div>
+                <h8>Número de preguntas</h8>
+                    <div className="form-group">
+                        <select 
+                            onChange={(e) => setNumberQuestions(e.target.value)}
+                            className="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
                     </div>
                     <h8>Pon las preguntas aquí</h8>
                     <div className="form-group">
@@ -155,6 +164,7 @@ export function PollDetail() {
                             className="form-control"
                             placeholder="finish Date" />
                     </div>
+
                     <button className="btn btn-primary btn-block">
                         {editing ? "Update" : "Create"}
                     </button>
@@ -181,6 +191,12 @@ export function PollDetail() {
                                 <td>{poll.questions}</td>
                                 <td>{poll.finishDate}</td>
                                 <td>
+                                    <button
+                                        className="btn btn-primary btn-sm btn-block"
+                                        onClick={(e) => answerPoll(poll._id)}
+                                    >
+                                        Answer
+                                    </button>
                                     <button
                                         className="btn btn-secondary btn-sm btn-block"
                                         onClick={(e) => editPoll(poll._id)}

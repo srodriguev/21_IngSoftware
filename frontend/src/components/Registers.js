@@ -6,6 +6,10 @@ export const Registers = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [reputation, setReputation] = useState("");
+  const [pollNumber, setPollNumber] = useState("");
+  const [answerNumber, setAnswerNumber] = useState("");
+
 
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState("");
@@ -14,9 +18,17 @@ export const Registers = () => {
 
   let [users, setUsers] = useState([]);
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!editing) {
+
+      //what I tried to add, it didnt work.
+      setReputation(0);
+      setPollNumber(0);
+      setAnswerNumber(0);
+      // ----
+
       const res = await fetch(`${API}/users`, {
         method: "POST",
         headers: {
@@ -26,6 +38,9 @@ export const Registers = () => {
           name,
           email,
           password,
+          reputation,
+          pollNumber,
+          answerNumber
         }),
       });
       await res.json();
@@ -39,6 +54,9 @@ export const Registers = () => {
           name,
           email,
           password,
+          reputation,
+          pollNumber,
+          answerNumber
         }),
       });
       const data = await res.json();
@@ -51,6 +69,9 @@ export const Registers = () => {
     setName("");
     setEmail("");
     setPassword("");
+    setReputation("");
+    setPollNumber("");
+    setAnswerNumber("");
     nameInput.current.focus();
   };
 
@@ -71,6 +92,8 @@ export const Registers = () => {
       await getUsers();
     }
   };
+
+  
 
   const editUser = async (id) => {
     const res = await fetch(`${API}/users/${id}`);
@@ -123,14 +146,18 @@ export const Registers = () => {
               placeholder="User's Password"
             />
           </div>
+          
+
           <button className="btn btn-primary btn-block">
             {editing ? "Update" : "Create"}
           </button>
         </form>
       </div>
+
       <div className="col-md-6">
         <table className="table table-striped">
           <thead>
+            
             <tr>
               <th>Name</th>
               <th>Email</th>

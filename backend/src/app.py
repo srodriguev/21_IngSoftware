@@ -14,57 +14,70 @@ mongo = PyMongo(app)
 CORS(app)
 
 # Database
-db1 = mongo.db.reactUsers
-db2 = mongo.db.reactPolls
-db3 = mongo.db.reactAnswers
+_dbUsers = mongo.db.reactUsers
+_dbPolls = mongo.db.reactPolls
+_dbAnswers = mongo.db.reactAnswers
 
 # Routes
 @app.route('/users', methods=['POST'])
 def createUser():
   print(request.json)
-  id = db1.insert({
+  id = _dbUsers.insert({
     'name': request.json['name'],
     'email': request.json['email'],
-    'password': request.json['password']
+    'password': request.json['password'],
+    'reputation': request.json['reputation'],
+    'pollNumber': request.json['pollNumber'],
+    'answerNumber': request.json['answerNumber']
   })
   return jsonify(str(ObjectId(id)))
 
 @app.route('/users', methods=['GET'])
 def getUsers():
     users = []
-    for doc in db1.find():
+    for doc in _dbUsers.find():
         users.append({
             '_id': str(ObjectId(doc['_id'])),
             'name': doc['name'],
             'email': doc['email'],
-            'password': doc['password']
+            'password': doc['password'],
+            'reputation': doc['reputation'],
+            'pollNumber': doc['pollNumber'],
+            'answerNumber':doc['answerNumber']
+
         })
     return jsonify(users)
 
 @app.route('/users/<id>', methods=['GET'])
 def getUser(id):
-  user = db1.find_one({'_id': ObjectId(id)})
+  user = _dbUsers.find_one({'_id': ObjectId(id)})
   print(user)
   return jsonify({
       '_id': str(ObjectId(user['_id'])),
       'name': user['name'],
       'email': user['email'],
-      'password': user['password']
+      'password': user['password'],
+      'reputation': user['reputation'],
+      'pollNumber': user['pollNumber'],
+      'answerNumber':user['answerNumber']
   })
 
 
 @app.route('/users/<id>', methods=['DELETE'])
 def deleteUser(id):
-  db1.delete_one({'_id': ObjectId(id)})
+  _dbUsers.delete_one({'_id': ObjectId(id)})
   return jsonify({'message': 'User Deleted'})
 
 @app.route('/users/<id>', methods=['PUT'])
 def updateUser(id):
   print(request.json)
-  db1.update_one({'_id': ObjectId(id)}, {"$set": {
+  _dbUsers.update_one({'_id': ObjectId(id)}, {"$set": {
     'name': request.json['name'],
     'email': request.json['email'],
-    'password': request.json['password']
+    'password': request.json['password'],
+    'reputation': request.json['reputation'],
+    'pollNumber': request.json['pollNumber'],
+    'answerNumber':request.json['answerNumber']
   }})
   return jsonify({'message': 'User Updated'})
 
@@ -75,8 +88,8 @@ def updateUser(id):
 @app.route('/board', methods=['POST'])
 def createPoll():
   print(request.json)
-  id = db2.insert({
-    'name': request.json['name'],
+  id = _dbPolls.insert({
+    'pollName': request.json['pollName'],
     'targetPublic': request.json['targetPublic'],
     'questions': request.json['questions'],
     'finishDate': request.json['finishDate']
@@ -87,10 +100,10 @@ def createPoll():
 @app.route('/board', methods=['GET'])
 def getPolls():
     polls = []
-    for doc in db2.find():
+    for doc in _dbPolls.find():
         polls.append({
             '_id': str(ObjectId(doc['_id'])),
-            'name': doc['name'],
+            'pollName': doc['pollName'],
             'targetPublic': doc['targetPublic'],
             'questions': doc['questions'],
             'finishDate': doc['finishDate']
@@ -99,11 +112,11 @@ def getPolls():
 
 @app.route('/board/<id>', methods=['GET'])
 def getPoll(id):
-  poll = db2.find_one({'_id': ObjectId(id)})
+  poll = _dbPolls.find_one({'_id': ObjectId(id)})
   print(poll)
   return jsonify({
       '_id': str(ObjectId(poll['_id'])),
-      'name': poll['name'],
+      'pollName': poll['pollName'],
       'targetPublic': poll['targetPublic'],
       'questions': poll['questions'],
       'finishDate': poll['finishDate']
@@ -112,14 +125,14 @@ def getPoll(id):
 
 @app.route('/board/<id>', methods=['DELETE'])
 def deletePoll(id):
-  db2.delete_one({'_id': ObjectId(id)})
+  _dbPolls.delete_one({'_id': ObjectId(id)})
   return jsonify({'message': 'Poll Deleted'})
 
 @app.route('/board/<id>', methods=['PUT'])
 def updatePoll(id):
   print(request.json)
-  db2.update_one({'_id': ObjectId(id)}, {"$set": {
-    'name': request.json['name'],
+  _dbPolls.update_one({'_id': ObjectId(id)}, {"$set": {
+    'pollName': request.json['pollName'],
     'targetPublic': request.json['targetPublic'],
     'questions': request.json['questions'],
     'finishDate': request.json['finishDate']
@@ -130,10 +143,10 @@ def updatePoll(id):
   # separador - inicio answers
 
 # Routes
-@app.route('/PollDetail/', methods=['POST'])
+@app.route('/answers/', methods=['POST'])
 def createAnswer():
   print(request.json)
-  id = db3.insert({
+  id = _dbAnswers.insert({
     'pollID': request.json['pollID'],
     'name': request.json['name'],
     'answers': request.json['answers'],
@@ -142,10 +155,10 @@ def createAnswer():
   return jsonify(str(ObjectId(id)))
 
 
-@app.route('/PollDetail/', methods=['GET'])
+@app.route('/answers/', methods=['GET'])
 def getAnswers():
     answers = []
-    for doc in db3.find():
+    for doc in _dbAnswers.find():
         answers.append({
             '_id': str(ObjectId(doc['_id'])),
             'pollID': doc['pollID'],
@@ -155,9 +168,9 @@ def getAnswers():
         })
     return jsonify(answers)
 
-@app.route('/PollDetail/<id>', methods=['GET'])
+@app.route('/answers/<id>', methods=['GET'])
 def getAnswer(id):
-  answer = db3.find_one({'_id': ObjectId(id)})
+  answer = _dbAnswers.find_one({'_id': ObjectId(id)})
   print(answer)
   return jsonify({
       '_id': str(ObjectId(answer['_id'])),
@@ -168,16 +181,16 @@ def getAnswer(id):
   })
 
 
-@app.route('/PollDetail/<id>', methods=['DELETE'])
+@app.route('/answers/<id>', methods=['DELETE'])
 def deleteAnswer(id):
-  db3.delete_one({'_id': ObjectId(id)})
+  _dbAnswers.delete_one({'_id': ObjectId(id)})
   return jsonify({'message': 'Answer Deleted'})
 
 
-@app.route('/PollDetail/<id>', methods=['PUT'])
+@app.route('/answers/<id>', methods=['PUT'])
 def updateAnswer(id):
   print(request.json)
-  db3.update_one({'_id': ObjectId(id)}, {"$set": {
+  _dbAnswers.update_one({'_id': ObjectId(id)}, {"$set": {
     'pollID': request.json['pollID'],
     'name': request.json['name'],
     'answers': request.json['answers'],
