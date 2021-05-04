@@ -134,18 +134,7 @@ export function Board() {
                                     >
                                         Answer
                                     </button>
-                                    <button
-                                        className="btn btn-secondary btn-sm btn-block"
-                                        onClick={(e) => editPoll(poll._id)}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        className="btn btn-danger btn-sm btn-block"
-                                        onClick={(e) => deletePoll(poll._id)}
-                                    >
-                                        Delete
-                                    </button>  
+                                    
                                 </td>
                             </tr>
                         ))}

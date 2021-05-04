@@ -23,11 +23,10 @@ export const Registers = () => {
     e.preventDefault();
     if (!editing) {
 
-      //what I tried to add, it didnt work.
+      // initialize in zero
       setReputation(0);
       setPollNumber(0);
       setAnswerNumber(0);
-      // ----
 
       const res = await fetch(`${API}/users`, {
         method: "POST",

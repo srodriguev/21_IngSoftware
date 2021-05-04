@@ -6,7 +6,7 @@ export function Polls() {
     
     const [pollName, setPollName] = useState("");
     const [targetPublic, setTargetPublic] = useState("");
-    const [questions, setQuestions] = useState("");
+    const [questions, setQuestions] = useState([]);
     const [numberQuestions, setNumberQuestions] = useState("");
     const [finishDate, setFinishDate] = useState("");
     
@@ -140,15 +140,16 @@ export function Polls() {
                             <option>3</option>
                             <option>4</option>
                             <option>5</option>
+                            <option>6</option>
                         </select>
                     </div>
-                    <h8>Pon las preguntas aquí</h8>
+                <h8>Pon las preguntas aquí</h8>
                     <div className="form-group">
                         <input
                             type="textArea" 
                             value= {questions}
                             rows= {5}
-                            style= {{ minHeight:150, resize: "none" }}
+                            style= {{ minHeight:100, resize: "none" }}
                             onChange={(e) => setQuestions(e.target.value)}
                             className="form-control"
                             placeholder="Questions" />
@@ -191,12 +192,6 @@ export function Polls() {
                                 <td>{poll.questions}</td>
                                 <td>{poll.finishDate}</td>
                                 <td>
-                                    <button
-                                        className="btn btn-primary btn-sm btn-block"
-                                        onClick={(e) => answerPoll(poll._id)}
-                                    >
-                                        Answer
-                                    </button>
                                     <button
                                         className="btn btn-secondary btn-sm btn-block"
                                         onClick={(e) => editPoll(poll._id)}
