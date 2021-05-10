@@ -10,6 +10,8 @@ import { Board } from "./components/Board";
 import { HomePage } from "./components/HomePage";
 import { Polls } from "./components/Polls";
 import { Registers } from "./components/Registers";
+import { Answers } from "./components/Answers";
+import { Contact } from "./components/Contact";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route exact path="/Board" component={Board} />
           <Route exact path="/Polls" component={Polls} />
           <Route exact path="/Registers" component={Registers} />
+          <Route exact path="/Contact" component={Contact} />
+          <Route path= "/Answers/:_id" component={Answers}/>
           <Route exact path="/" component={HomePage} />
         </Switch>
       </div>

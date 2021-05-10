@@ -98,9 +98,6 @@ export function Polls() {
         nameInput.current.focus();
     };
 
-    const answerPoll = async (id) => {
-        
-    };
 
     useEffect(() => {
         getPolls();
@@ -157,7 +154,7 @@ export function Polls() {
                     <h8>Pon la fecha límite del cuestionario</h8>
                     <div className="form-group">
                         <input
-                            Label ="Finish Date"
+                            label ="Finish Date"
                             text = "Finish Date of Poll"
                             type="Date"
                             onChange={(e) => setFinishDate(e.target.value)}

@@ -1,4 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useReducer } from "react";
+import {Answers} from "./Answers"
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useRouteMatch
+  } from "react-router-dom";
 
 const API = process.env.REACT_APP_API;
 
@@ -8,103 +16,34 @@ export function Board() {
     const [targetPublic, setTargetPublic] = useState("");
     const [questions, setQuestions] = useState("");
     const [finishDate, setFinishDate] = useState("");
-
-
-
+    const [currentPoll, setCurrentPoll] = useState("");
     const [editing, setEditing] = useState(false);
+    const [answering, setAnswering] = useState(false);
+
     const [id, setId] = useState("");
+    
 
     const nameInput = useRef(null);
 
     let [polls, setPolls] = useState([]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!editing) {
-            const res = await fetch(`${API}/board`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    pollName,
-                    targetPublic,
-                    questions,
-                    finishDate,
-                    
-                }),
-            });
-            await res.json();
-        } else {
-            const res = await fetch(`${API}/board/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    pollName,
-                    targetPublic,
-                    questions,
-                    finishDate,
-                    
-                }),
-            });
-            const data = await res.json();
-            console.log(data);
-            setEditing(false);
-            setId("");
-        }
-        await getPolls();
-
-        setPollName("");
-        setTargetPublic("");
-        setQuestions("");
-        setFinishDate("");
-
-        nameInput.current.focus();
-    };
 
     const getPolls = async () => {
         const res = await fetch(`${API}/board`);
         const data = await res.json();
         setPolls(data);
     };
-
-    const deletePoll = async (id) => {
-        const userResponse = window.confirm("Are you sure you want to delete it?");
-        if (userResponse) {
-            const res = await fetch(`${API}/board/${id}`, {
-                method: "DELETE",
-            });
-            const data = await res.json();
-            console.log(data);
-            await getPolls();
-        }
-    };
-
-    const editPoll = async (id) => {
-        const res = await fetch(`${API}/board/${id}`);
-        const data = await res.json();
-
-        setEditing(true);
-        setId(id);
-
-        // Reset
-        setPollName(data.pollName);
-        setTargetPublic(data.targetPublic);
-        setQuestions(data.questions);
-        setFinishDate(data.finishDate);
-
-        nameInput.current.focus();
-    };
-
-    const answerPoll = async (id) => {
-        
-    };
+    
 
     useEffect(() => {
         getPolls();
     }, []);
+
+    const answerPoll = async (id) => {
+        setCurrentPoll(id);
+        setAnswering(true);
+
+    };
 
     return (
         <div className="row">           
@@ -127,20 +66,17 @@ export function Board() {
                                 <td>{poll.targetPublic}</td>
                                 <td>{poll.questions}</td>
                                 <td>{poll.finishDate}</td>
-                                <td>
-                                    <button
-                                        className="btn btn-primary btn-sm btn-block"
-                                        onClick={(e) => answerPoll(poll._id)}
-                                    >
-                                        Answer
-                                    </button>
-                                    
+                                <td>                                  
+                                    <a href={'/Answers/'+poll._id}>Answer</a> 
                                 </td>
                             </tr>
                         ))}
                     </tbody>
+                    
                 </table>
             </div>
         </div>
     );
 }
+
+  

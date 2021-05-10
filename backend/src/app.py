@@ -11,12 +11,14 @@ app.config['MONGO_URI'] = 'mongodb+srv://sara:Sara012@cluster1.vvhuq.mongodb.net
 mongo = PyMongo(app)
 
 # Settings
-CORS(app)
+cors = CORS(app)
 
 # Database
 _dbUsers = mongo.db.reactUsers
 _dbPolls = mongo.db.reactPolls
 _dbAnswers = mongo.db.reactAnswers
+_dbOpinions = mongo.db.reactOpinions
+
 
 # Routes
 @app.route('/users', methods=['POST'])
@@ -148,8 +150,9 @@ def createAnswer():
   print(request.json)
   id = _dbAnswers.insert({
     'pollID': request.json['pollID'],
-    'name': request.json['name'],
-    'answers': request.json['answers'],
+    'contestantName': request.json['contestantName'],
+    'pollAnswers': request.json['pollAnswers'],
+    'answerDate': request.json['answerDate'],
     'notes': request.json['notes']
   })
   return jsonify(str(ObjectId(id)))
@@ -162,8 +165,9 @@ def getAnswers():
         answers.append({
             '_id': str(ObjectId(doc['_id'])),
             'pollID': doc['pollID'],
-            'name': doc['name'],
-            'answers': doc['answers'],
+            'contestantName': doc['contestantName'],
+            'pollAnswers': doc['pollAnswers'],
+            'answerDate': doc['answerDate'],
             'notes': doc['notes']
         })
     return jsonify(answers)
@@ -175,8 +179,9 @@ def getAnswer(id):
   return jsonify({
       '_id': str(ObjectId(answer['_id'])),
       'pollID': answer['pollID'],
-      'name': answer['name'],
-      'answers': answer['answers'],
+      'contestantName': answer['contestantName'],
+      'pollAnswers': answer['pollAnswers'],
+      'answerDate': answer['answerDate'],
       'notes': answer['notes']
   })
 
@@ -192,11 +197,29 @@ def updateAnswer(id):
   print(request.json)
   _dbAnswers.update_one({'_id': ObjectId(id)}, {"$set": {
     'pollID': request.json['pollID'],
-    'name': request.json['name'],
-    'answers': request.json['answers'],
+    'contestantName': request.json['contestantName'],
+    'pollAnswers': request.json['pollAnswers'],
+    'answerDate': ['answerDate'],
     'notes': request.json['notes']
   }})
   return jsonify({'message': 'Answer Updated'})
+
+
+
+# Separador Contact Info
+
+# Routes
+@app.route('/Contact/', methods=['POST'])
+def createOpinion():
+  print(request.json)
+  id = _dbOpinions.insert({
+    'name': request.json['name'],
+    'email': request.json['email'],
+    'rating': request.json['rating'],
+    'opinion': request.json['opinion']
+  })
+  return jsonify(str(ObjectId(id)))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
