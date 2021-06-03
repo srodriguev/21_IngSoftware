@@ -16,7 +16,6 @@ export function Contact() {
   const [rating, setRating] = useState("");
   const [opinion, setOpinion] = useState("");
 
-  const [id, setId] = useState("");
   const nameInput = useRef(null);
   let [opinions, setOpinions] = useState([]);
 
@@ -34,10 +33,9 @@ export function Contact() {
                   opinion,
               }),
             });
-          await res.json();
           const data = await res.json();
           console.log(data);
-          setId("");
+        
         setName("");
         setEmail("");
         setRating("");
@@ -49,7 +47,8 @@ export function Contact() {
 
     return (
         <div className="row">
-            <div className="col-md-5">
+            <div className="col-md-12">
+                <h2>Contáctanos llenando esta forma:</h2>
                 <form onSubmit={handleSubmit} className="card card-body">
                 <h8>Nombre de quien opina</h8>
                     <div className="form-group">
@@ -76,22 +75,20 @@ export function Contact() {
                         <select 
                             onChange={(e) => setRating(e.target.value)}
                             className="form-control">
-                            <option value={rating}>1</option>
-                            <option value={rating}>2</option>
-                            <option value={rating}>3</option>
-                            <option value={rating}>4</option>
-                            <option value={rating}>5</option>
-                            <option value={rating}>6</option>
+                            <option value={1}>1</option>
+                            <option value={2}>2</option>
+                            <option value={3}>3</option>
+                            <option value={4}>4</option>
+                            <option value={5}>5</option>
                         </select>
                     </div>
                 <h8>Pon tus opiniones</h8>
                     <div className="form-group">
                         <input
-                            type="textArea" 
-                            value= {opinions}
-                            rows= {5}
+                            type="text" 
                             style= {{ minHeight:100, resize: "none" }}
-                            onChange={(e) => setOpinions(e.target.value)}
+                            onChange={(e) => setOpinion(e.target.value)}
+                            value= {opinion}
                             className="form-control"
                             placeholder="Opinions" />
                     </div> 

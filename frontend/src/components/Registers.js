@@ -24,9 +24,9 @@ export const Registers = () => {
     if (!editing) {
 
       // initialize in zero
-      setReputation(0);
-      setPollNumber(0);
-      setAnswerNumber(0);
+      setReputation("0");
+      setPollNumber("0");
+      setAnswerNumber("0");
 
       const res = await fetch(`${API}/users`, {
         method: "POST",
@@ -68,9 +68,9 @@ export const Registers = () => {
     setName("");
     setEmail("");
     setPassword("");
-    setReputation("");
-    setPollNumber("");
-    setAnswerNumber("");
+    setReputation("0");
+    setPollNumber("0");
+    setAnswerNumber("0");
     nameInput.current.focus();
   };
 

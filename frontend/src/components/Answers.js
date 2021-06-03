@@ -10,6 +10,8 @@ export function Answers(props) {
     const [answerDate, setAnswerDate] = useState("");
     const [notes, setNotes] = useState("");
     
+    const [firstLoad, setFirstLoad] = useState(false);
+    
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState("");
 
@@ -23,6 +25,8 @@ export function Answers(props) {
         e.preventDefault();
 
         setPollID(poll._id);
+        var d = new Date();
+        setAnswerDate(d.toISOString());   
 
         if (!editing) {
             const res = await fetch(`${API}/answers`, {
@@ -71,16 +75,21 @@ export function Answers(props) {
 
     useEffect(() => {
         // fetch("http://localhost:3000/board"+props.match.params._id)
-        fetch(`${API}/board/${props.match.params._id}`, {
-            method: "GET" , 
-            headers: { 
-                "Content-Type": "application/json"}})   
-        .then(res => res.json())
-        .then(
-            (result) => {
-                setPoll(result);
-            }
-        );
+        if (!firstLoad)
+        {
+            fetch(`${API}/board/${props.match.params._id}`, {
+                method: "GET" , 
+                headers: { 
+                    "Content-Type": "application/json"}})   
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    setPoll(result);
+                }
+            );
+            setFirstLoad(true);
+            setPollID(props.match.params._id);
+        }
     });
 
     const getAnswers = async () => {
@@ -146,7 +155,7 @@ export function Answers(props) {
 
                 <h3>Respuestas a inscribir: </h3>
                 <form onSubmit={handleSubmit} className="card card-body">
-                    <h8>Nombre de quien contesta</h8>
+                    Nombre de quien contesta
                     <div className="form-group">
                         <input
                         type="text"
@@ -158,7 +167,7 @@ export function Answers(props) {
                         autoFocus
                         />
                     </div>
-                    <h8>Respuestas a guardar:</h8>
+                    Respuestas a guardar:
                     <div className="form-group">
                         <input
                         type="textArea"
@@ -169,7 +178,7 @@ export function Answers(props) {
                         placeholder="Answers to record"
                         />
                     </div>
-                    <h8>Notas:</h8>
+                    Notas:
                     <div className="form-group">
                         <input
                         type="text"
@@ -179,7 +188,8 @@ export function Answers(props) {
                         placeholder="Any additional notes"
                         />
                     </div>
-                    <button className="btn btn-primary btn-block" onClick={(e) => handleSubmit(e)}>
+                    
+                    <button className="btn btn-primary btn-block">
                         {editing ? "Update" : "Create"}
                     </button>
                 </form>

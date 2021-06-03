@@ -1,17 +1,30 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response, current_app
 from flask_pymongo import PyMongo
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
+from datetime import timedelta
+from functools import update_wrapper
+
 
 from bson import ObjectId
+
+import datetime
 
 # Instantiation
 app = Flask(__name__)
 # app.config['MONGO_URI'] = 'mongodb://localhost/pythonreact'
 app.config['MONGO_URI'] = 'mongodb+srv://sara:Sara012@cluster1.vvhuq.mongodb.net/pythonreact?retryWrites=true&w=majority'
+
 mongo = PyMongo(app)
 
 # Settings
-cors = CORS(app)
+cors = CORS(app, resource={
+    r"/*":{
+        "origins":"*"
+    }
+})
+
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 # Database
 _dbUsers = mongo.db.reactUsers
@@ -21,20 +34,24 @@ _dbOpinions = mongo.db.reactOpinions
 
 
 # Routes
+
+
 @app.route('/users', methods=['POST'])
+@cross_origin()
 def createUser():
   print(request.json)
   id = _dbUsers.insert({
     'name': request.json['name'],
     'email': request.json['email'],
     'password': request.json['password'],
-    'reputation': request.json['reputation'],
-    'pollNumber': request.json['pollNumber'],
-    'answerNumber': request.json['answerNumber']
+    'reputation': 0,
+    'pollNumber': 0,
+    'answerNumber': 0
   })
   return jsonify(str(ObjectId(id)))
 
 @app.route('/users', methods=['GET'])
+@cross_origin()
 def getUsers():
     users = []
     for doc in _dbUsers.find():
@@ -51,6 +68,7 @@ def getUsers():
     return jsonify(users)
 
 @app.route('/users/<id>', methods=['GET'])
+@cross_origin()
 def getUser(id):
   user = _dbUsers.find_one({'_id': ObjectId(id)})
   print(user)
@@ -66,11 +84,13 @@ def getUser(id):
 
 
 @app.route('/users/<id>', methods=['DELETE'])
+@cross_origin()
 def deleteUser(id):
   _dbUsers.delete_one({'_id': ObjectId(id)})
   return jsonify({'message': 'User Deleted'})
 
 @app.route('/users/<id>', methods=['PUT'])
+@cross_origin()
 def updateUser(id):
   print(request.json)
   _dbUsers.update_one({'_id': ObjectId(id)}, {"$set": {
@@ -88,6 +108,7 @@ def updateUser(id):
 
 # Routes
 @app.route('/board', methods=['POST'])
+@cross_origin()
 def createPoll():
   print(request.json)
   id = _dbPolls.insert({
@@ -100,6 +121,7 @@ def createPoll():
 
 
 @app.route('/board', methods=['GET'])
+@cross_origin()
 def getPolls():
     polls = []
     for doc in _dbPolls.find():
@@ -113,6 +135,7 @@ def getPolls():
     return jsonify(polls)
 
 @app.route('/board/<id>', methods=['GET'])
+@cross_origin()
 def getPoll(id):
   poll = _dbPolls.find_one({'_id': ObjectId(id)})
   print(poll)
@@ -126,6 +149,7 @@ def getPoll(id):
 
 
 @app.route('/board/<id>', methods=['DELETE'])
+@cross_origin()
 def deletePoll(id):
   _dbPolls.delete_one({'_id': ObjectId(id)})
   return jsonify({'message': 'Poll Deleted'})
@@ -145,20 +169,23 @@ def updatePoll(id):
   # separador - inicio answers
 
 # Routes
-@app.route('/answers/', methods=['POST'])
+@app.route('/answers', methods=['POST'])
+@cross_origin()
 def createAnswer():
   print(request.json)
+  x= datetime.datetime.now()
   id = _dbAnswers.insert({
     'pollID': request.json['pollID'],
     'contestantName': request.json['contestantName'],
     'pollAnswers': request.json['pollAnswers'],
-    'answerDate': request.json['answerDate'],
+    'answerDate': x,
     'notes': request.json['notes']
   })
   return jsonify(str(ObjectId(id)))
 
 
-@app.route('/answers/', methods=['GET'])
+@app.route('/answers', methods=['GET'])
+@cross_origin()
 def getAnswers():
     answers = []
     for doc in _dbAnswers.find():
@@ -173,6 +200,7 @@ def getAnswers():
     return jsonify(answers)
 
 @app.route('/answers/<id>', methods=['GET'])
+@cross_origin()
 def getAnswer(id):
   answer = _dbAnswers.find_one({'_id': ObjectId(id)})
   print(answer)
@@ -187,19 +215,21 @@ def getAnswer(id):
 
 
 @app.route('/answers/<id>', methods=['DELETE'])
+@cross_origin()
 def deleteAnswer(id):
   _dbAnswers.delete_one({'_id': ObjectId(id)})
   return jsonify({'message': 'Answer Deleted'})
 
 
 @app.route('/answers/<id>', methods=['PUT'])
+@cross_origin()
 def updateAnswer(id):
   print(request.json)
   _dbAnswers.update_one({'_id': ObjectId(id)}, {"$set": {
     'pollID': request.json['pollID'],
     'contestantName': request.json['contestantName'],
     'pollAnswers': request.json['pollAnswers'],
-    'answerDate': ['answerDate'],
+    'answerDate': request.json['answerDate'],
     'notes': request.json['notes']
   }})
   return jsonify({'message': 'Answer Updated'})
@@ -209,7 +239,8 @@ def updateAnswer(id):
 # Separador Contact Info
 
 # Routes
-@app.route('/Contact/', methods=['POST'])
+@app.route('/Contact', methods=['POST'])
+@cross_origin()
 def createOpinion():
   print(request.json)
   id = _dbOpinions.insert({
@@ -219,6 +250,7 @@ def createOpinion():
     'opinion': request.json['opinion']
   })
   return jsonify(str(ObjectId(id)))
+
 
 
 if __name__ == "__main__":
